@@ -7,13 +7,13 @@ from nltk.classify import NaiveBayesClassifier
 data_source_url = "https://raw.githubusercontent.com/kolaveridi/kaggle-Twitter-US-Airline-Sentiment-/master/Tweets.csv"
 airline_tweets = pd.read_csv(data_source_url, sep=",")
 
-is_positive = tweets['airline_sentiment'].str.contains("positive")
-is_negative = tweets['airline_sentiment'].str.contains("negative")
-is_neutral = tweets['airline_sentiment'].str.contains("neutral")
+is_positive = airline_tweets['airline_sentiment'].str.contains("positive")
+is_negative = airline_tweets['airline_sentiment'].str.contains("negative")
+is_neutral = airline_tweets['airline_sentiment'].str.contains("neutral")
 
-positive_tweets = tweets[is_positive]
-negative_tweets = tweets[is_negative]
-neutral_tweets = tweets[is_neutral]
+positive_tweets = airline_tweets[is_positive]
+negative_tweets = airline_tweets[is_negative]
+neutral_tweets = airline_tweets[is_neutral]
 
 nltk.download("punkt")
 nltk.download("stopwords")
