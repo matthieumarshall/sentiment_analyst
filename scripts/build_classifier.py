@@ -5,21 +5,6 @@ from nltk.classify import NaiveBayesClassifier
 import pickle
 import os
 
-project_root_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-
-data_source_url = "https://raw.githubusercontent.com/kolaveridi/kaggle-Twitter-US-Airline-Sentiment-/master/Tweets.csv"
-airline_tweets = pd.read_csv(data_source_url, sep=",")
-
-is_positive = airline_tweets['airline_sentiment'].str.contains("positive")
-is_negative = airline_tweets['airline_sentiment'].str.contains("negative")
-is_neutral = airline_tweets['airline_sentiment'].str.contains("neutral")
-
-positive_tweets = airline_tweets[is_positive]
-negative_tweets = airline_tweets[is_negative]
-neutral_tweets = airline_tweets[is_neutral]
-
-nltk.download("punkt")
-nltk.download("stopwords")
 
 useless_words = nltk.corpus.stopwords.words("english") + list(string.punctuation)
 
@@ -35,52 +20,70 @@ def build_bag_of_words_features_filtered(words: list):
         if word not in useless_words}
 
 
-tokenized_negative_tweets = []
-for text in negative_tweets['text']:
-    tokenized_negative_tweets.append(nltk.word_tokenize(text))
+def main():
+    project_root_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
-negative_features = [
-    (build_bag_of_words_features_filtered(text), 'neg')
-    for text in tokenized_negative_tweets
-]
+    data_source_url = "https://raw.githubusercontent.com/kolaveridi/kaggle-Twitter-US-Airline-Sentiment-/master" \
+                      "/Tweets.csv"
+    airline_tweets = pd.read_csv(data_source_url, sep=",")
 
-tokenized_positive_tweets = []
-for text in positive_tweets['text']:
-    tokenized_positive_tweets.append(nltk.word_tokenize(text))
+    is_positive = airline_tweets['airline_sentiment'].str.contains("positive")
+    is_negative = airline_tweets['airline_sentiment'].str.contains("negative")
+    is_neutral = airline_tweets['airline_sentiment'].str.contains("neutral")
 
-positive_features = [
-    (build_bag_of_words_features_filtered(text), 'pos')
-    for text in tokenized_positive_tweets
-]
+    positive_tweets = airline_tweets[is_positive]
+    negative_tweets = airline_tweets[is_negative]
+    neutral_tweets = airline_tweets[is_neutral]
 
-tokenized_neutral_tweets = []
-for text in neutral_tweets['text']:
-    tokenized_neutral_tweets.append(nltk.word_tokenize(text))
+    nltk.download("punkt")
+    nltk.download("stopwords")
 
-neutral_features = [
-    (build_bag_of_words_features_filtered(text), 'neu')
-    for text in tokenized_neutral_tweets
-]
+    tokenized_negative_tweets = []
+    for text in negative_tweets['text']:
+        tokenized_negative_tweets.append(nltk.word_tokenize(text))
 
-split = 2000
+    negative_features = [
+        (build_bag_of_words_features_filtered(text), 'neg')
+        for text in tokenized_negative_tweets
+    ]
 
-sentiment_classifier = NaiveBayesClassifier.train(positive_features[:split]+negative_features[:split])
+    tokenized_positive_tweets = []
+    for text in positive_tweets['text']:
+        tokenized_positive_tweets.append(nltk.word_tokenize(text))
 
-accuracy_on_trained_data = nltk.classify.util.accuracy(sentiment_classifier, positive_features[:split] +
-                                                       negative_features[:split])*100
+    positive_features = [
+        (build_bag_of_words_features_filtered(text), 'pos')
+        for text in tokenized_positive_tweets
+    ]
 
-positive_features_verify = positive_features[split:]
-negative_features_verify = negative_features[split:2363]
+    tokenized_neutral_tweets = []
+    for text in neutral_tweets['text']:
+        tokenized_neutral_tweets.append(nltk.word_tokenize(text))
 
-accuracy_on_test_data = nltk.classify.util.accuracy(sentiment_classifier, positive_features_verify +
-                                                    negative_features_verify)*100
+    neutral_features = [
+        (build_bag_of_words_features_filtered(text), 'neu')
+        for text in tokenized_neutral_tweets
+    ]
 
-print("The accuracy on the trained data is {}".format(accuracy_on_trained_data))
+    split = 2000
 
-print("The accuracy on the test data is {}".format(accuracy_on_test_data))
+    sentiment_classifier = NaiveBayesClassifier.train(positive_features[:split]+negative_features[:split])
 
-filename = os.path.join(project_root_directory, "models", "naive_bayes_classifier.sav")
+    accuracy_on_trained_data = nltk.classify.util.accuracy(sentiment_classifier, positive_features[:split] +
+                                                           negative_features[:split])*100
 
-print("Saving model to {}".format(filename))
+    positive_features_verify = positive_features[split:]
+    negative_features_verify = negative_features[split:2363]
 
-pickle.dump(sentiment_classifier, open(filename, 'wb'))
+    accuracy_on_test_data = nltk.classify.util.accuracy(sentiment_classifier, positive_features_verify +
+                                                        negative_features_verify)*100
+
+    print("The accuracy on the trained data is {}".format(accuracy_on_trained_data))
+
+    print("The accuracy on the test data is {}".format(accuracy_on_test_data))
+
+    filename = os.path.join(project_root_directory, "models", "naive_bayes_classifier.sav")
+
+    print("Saving model to {}".format(filename))
+
+    pickle.dump(sentiment_classifier, open(filename, 'wb'))
