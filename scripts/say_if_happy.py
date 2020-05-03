@@ -5,48 +5,54 @@ import os
 import nltk
 from scripts.build_classifier import build_bag_of_words_features_filtered
 
-project_root_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+def main():
 
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
+    project_root_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
-api = tweepy.API(auth)
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
 
-filename = os.path.join(project_root_directory, "models", "naive_bayes_classifier.sav")
+    api = tweepy.API(auth)
 
-sentiment_classifier = pickle.load(open(filename, 'rb'))
+    filename = os.path.join(project_root_directory, "models", "naive_bayes_classifier.sav")
 
-results = api.search(q='cheese', count=100)
+    sentiment_classifier = pickle.load(open(filename, 'rb'))
 
-twitter_user = api.get_user("matthieu_run")
+    results = api.search(q='cheese', count=100)
 
-new_tweets = api.user_timeline(screen_name="matthieu_run", count=5)
+    twitter_user = api.get_user("matthieu_run")
 
-latest_tweet = new_tweets[0].text
+    new_tweets = api.user_timeline(screen_name="matthieu_run", count=5)
 
-text = "I am happy today"
+    latest_tweet = new_tweets[0].text
 
-text2 = "I am upset today"
+    text = "I am happy today"
 
-tokenised_tweet = nltk.word_tokenize(latest_tweet)
+    text2 = "I am upset today"
 
-tokenised_text = nltk.word_tokenize(text)
+    tokenised_tweet = nltk.word_tokenize(latest_tweet)
 
-tokenised_text2 = nltk.word_tokenize(text2)
+    tokenised_text = nltk.word_tokenize(text)
 
-bag_of_words_latest_tweet = build_bag_of_words_features_filtered(tokenised_tweet)
+    tokenised_text2 = nltk.word_tokenize(text2)
 
-bag_of_words = build_bag_of_words_features_filtered(tokenised_text)
+    bag_of_words_latest_tweet = build_bag_of_words_features_filtered(tokenised_tweet)
 
-bag_of_words2 = build_bag_of_words_features_filtered(tokenised_text2)
+    bag_of_words = build_bag_of_words_features_filtered(tokenised_text)
+
+    bag_of_words2 = build_bag_of_words_features_filtered(tokenised_text2)
 
 
-result = sentiment_classifier.classify(bag_of_words)
+    result = sentiment_classifier.classify(bag_of_words)
 
-result2 = sentiment_classifier.classify(bag_of_words2)
+    result2 = sentiment_classifier.classify(bag_of_words2)
 
-result3 = sentiment_classifier.classify(bag_of_words_latest_tweet)
+    result3 = sentiment_classifier.classify(bag_of_words_latest_tweet)
 
-print("{} has been classified as {}".format(text, result))
-print("{} has been classified as {}".format(text2, result2))
-print("{} has been classified as {}".format(latest_tweet, result3))
+    print("{} has been classified as {}".format(text, result))
+    print("{} has been classified as {}".format(text2, result2))
+    print("{} has been classified as {}".format(latest_tweet, result3))
+
+
+if __name__ == "__main__":
+    main()

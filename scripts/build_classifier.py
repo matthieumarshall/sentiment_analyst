@@ -87,3 +87,7 @@ def main():
     print("Saving model to {}".format(filename))
 
     pickle.dump(sentiment_classifier, open(filename, 'wb'))
+
+
+if __name__ == "__main__":
+    main()
