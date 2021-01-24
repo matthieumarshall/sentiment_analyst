@@ -1,4 +1,4 @@
-data/credentials.py
+src/data/credentials.py
 .vs/
 .idea/
 # Byte-compiled / optimized / DLL files
