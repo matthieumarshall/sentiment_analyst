@@ -10,7 +10,7 @@ from src.data.credentials import (
 import os
 import nltk
 import statistics
-from src.scripts.build_classifier import build_bag_of_words_features_filtered
+from src.sentiment_analyst.build_classifier import build_bag_of_words_features_filtered
 
 
 class TweetAnalyser:
