@@ -1,7 +1,12 @@
 import tweepy
 import pickle
 import argparse
-from src.data.credentials import *
+from src.data.credentials import (
+    consumer_key,
+    consumer_secret,
+    access_token_secret,
+    access_token,
+)
 import os
 import nltk
 import statistics
@@ -27,15 +32,19 @@ class TweetAnalyser:
         :return:
         """
 
-        project_root_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+        project_root_directory = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), ".."
+        )
 
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
 
         api = tweepy.API(auth)
 
-        filename = os.path.join(project_root_directory, "models", "naive_bayes_classifier.sav")
-        self.sentiment_classifier = pickle.load(open(filename, 'rb'))
+        filename = os.path.join(
+            project_root_directory, "models", "naive_bayes_classifier.sav"
+        )
+        self.sentiment_classifier = pickle.load(open(filename, "rb"))
 
         new_tweets = api.user_timeline(screen_name=twitter_handle, count=5)
 
@@ -54,9 +63,11 @@ class TweetAnalyser:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Get arguments of package call.')
-    parser.add_argument("--twitter-handle",
-                        type=str,
-                        help="The twitter handle of the user you want to analyse the tweets of")
+    parser = argparse.ArgumentParser(description="Get arguments of package call.")
+    parser.add_argument(
+        "--twitter-handle",
+        type=str,
+        help="The twitter handle of the user you want to analyse the tweets of",
+    )
     args = parser.parse_args()
     TweetAnalyser(args.twitter_handle)
