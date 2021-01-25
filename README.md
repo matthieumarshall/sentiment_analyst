@@ -34,7 +34,7 @@ If you want to run it standalone, you simply need to run
 black .
 ```
 
-### Packagin
+### Packaging
 The setup.py enables packaging of this code into a `.whl` or `.tar.gz`.
 To create a wheel, run the following command:
 ```
