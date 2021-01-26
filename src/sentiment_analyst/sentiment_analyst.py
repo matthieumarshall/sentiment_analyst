@@ -1,7 +1,7 @@
 import tweepy
 import pickle
 import argparse
-from src.data.credentials import (
+from data.credentials import (
     consumer_key,
     consumer_secret,
     access_token_secret,
@@ -10,13 +10,14 @@ from src.data.credentials import (
 import os
 import nltk
 import statistics
-from src.sentiment_analyst.build_classifier import build_bag_of_words_features_filtered
+from sentiment_analyst.build_classifier import build_bag_of_words_features_filtered
 
 
 class TweetAnalyser:
     def __init__(self, twitter_handle):
         self.sentiment_classifier = None
         self.twitter_handle = twitter_handle
+        self.set_classifier()
 
     def classify_tweet(self, text):
         tokenised = nltk.word_tokenize(text)
@@ -25,28 +26,26 @@ class TweetAnalyser:
         numberator = {"pos": 1, "neg": 0}
         return numberator[result]
 
-    def main(self, twitter_handle: str):
-        """
-
-        :param twitter_handle:
-        :return:
-        """
-
+    def set_classifier(self):
         project_root_directory = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), ".."
         )
+        filename = os.path.join(
+            project_root_directory, "models", "naive_bayes_classifier.sav"
+        )
+        self.sentiment_classifier = pickle.load(open(filename, "rb"))
+
+    def main(self):
+        """
+        :return: str : A message summarising the sentiment of the last 5 tweets from that twitter handle
+        """
 
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
 
         api = tweepy.API(auth)
 
-        filename = os.path.join(
-            project_root_directory, "models", "naive_bayes_classifier.sav"
-        )
-        self.sentiment_classifier = pickle.load(open(filename, "rb"))
-
-        new_tweets = api.user_timeline(screen_name=twitter_handle, count=5)
+        new_tweets = api.user_timeline(screen_name=self.twitter_handle, count=5)
 
         latest_tweets = [new_tweets[i].text for i in range(0, 4)]
 
@@ -59,7 +58,10 @@ class TweetAnalyser:
             tweets_are = "negative"
         else:
             raise ValueError(f"The number {number} is wrong")
-        print(f"The last 5 tweets of {twitter_handle} have generally been {tweets_are}")
+        print(
+            f"The last 5 tweets of {self.twitter_handle} have generally been {tweets_are}"
+        )
+        return f"The last 5 tweets of {self.twitter_handle} have generally been {tweets_are}"
 
 
 if __name__ == "__main__":
