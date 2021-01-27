@@ -1,4 +1,4 @@
-src/sentiment_analyst/data/credentials.py
+sentiment_analyst/data/credentials.py
 .vs/
 .idea/
 # Byte-compiled / optimized / DLL files

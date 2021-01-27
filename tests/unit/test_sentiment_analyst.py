@@ -1,7 +1,4 @@
-import pytest
-from unittest.mock import patch
-from unittest import mock
-from src.sentiment_analyst.sentiment_analyst import TweetAnalyser
+from sentiment_analyst.sentiment_analyst import TweetAnalyser
 
 
 def test_classify_tweet():

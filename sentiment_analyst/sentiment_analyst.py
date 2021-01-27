@@ -1,7 +1,7 @@
 import tweepy
 import pickle
 import argparse
-from src.sentiment_analyst.data.credentials import (
+from sentiment_analyst.data.credentials import (
     consumer_key,
     consumer_secret,
     access_token_secret,
@@ -10,7 +10,7 @@ from src.sentiment_analyst.data.credentials import (
 import os
 import nltk
 import statistics
-from src.sentiment_analyst.build_classifier import build_bag_of_words_features_filtered
+from sentiment_analyst.build_classifier import build_bag_of_words_features_filtered
 
 
 class TweetAnalyser:
