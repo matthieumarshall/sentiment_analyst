@@ -1,7 +1,7 @@
 import tweepy
 import pickle
 import argparse
-from src.data.credentials import (
+from sentiment_analyst.data.credentials import (
     consumer_key,
     consumer_secret,
     access_token_secret,
@@ -10,7 +10,7 @@ from src.data.credentials import (
 import os
 import nltk
 import statistics
-from src.sentiment_analyst.build_classifier import build_bag_of_words_features_filtered
+from sentiment_analyst.build_classifier import build_bag_of_words_features_filtered
 
 
 class TweetAnalyser:
@@ -28,7 +28,7 @@ class TweetAnalyser:
 
     def set_classifier(self):
         project_root_directory = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), ".."
+            os.path.dirname(os.path.abspath(__file__)), ""
         )
         filename = os.path.join(
             project_root_directory, "models", "naive_bayes_classifier.sav"
