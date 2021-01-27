@@ -34,5 +34,6 @@ jobs:
     - name: Test with pytest
       run: |
         export PYTHONPATH=$pwd
+        echo $PYTHONPATH
         pwd
         python -m pytest src/tests/
