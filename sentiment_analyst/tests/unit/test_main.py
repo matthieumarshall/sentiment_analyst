@@ -1,5 +1,5 @@
 import pytest
-from sentiment_analyst.main import elevate_do, elevate_produce
+from main import elevate_do, elevate_produce
 
 
 def test_main():
