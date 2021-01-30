@@ -1,4 +1,4 @@
-from sentiment_analyst import TweetAnalyser
+from sentiment import TweetAnalyser
 
 
 def test_classify_tweet():
