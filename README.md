@@ -42,6 +42,26 @@ python setup.py bdist_wheel
 ```
 This will generate files in the `dist` and `build` directories.
 
+## GitHub Secrets
+
+In the Workflow file, this repository uses Github secrets for the credentials to access TWEEPY.
+These are named TWEEPY_CONSUMER_SECRET and TWEEPY_ACCESS_TOKEN_SECRET.
+
+The TWEEPY_CONSUMER_SECRET should be set to the tweepy consumer secret token
+And similarly the TWEEPY_ACCESS_TOKEN_SECRET should be set the tweepy consumer secret token.
+
+You can set up a Powershell script to do this for example:
+```
+# set environment variables for the tweepy credentials while developping
+$Env:TWEEPY_CONSUMER_SECRET="<<insert value here>>"
+$Env:TWEEPY_ACCESS_TOKEN_SECRET="<<insert value here>>"
+```
+which can then be run in Powershell by simply executing
+.\scripts\development_environment_variavles.ps1 if that is how you named the script.
+You may also need to run the following to allow execution of powershell scripts
+```
+Set-ExecutionPolicy -ExecutionPolicy AllSigned -Scope CurrentUser
+```
 ## Algorithm information
 
 Some early articles from which to get ideas about the algorithm part:
