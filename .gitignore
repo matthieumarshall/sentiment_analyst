@@ -1,4 +1,4 @@
-sentiment_analyst/data/credentials.py
+scripts/development_environment_variables.ps1
 .vs/
 .idea/
 # Byte-compiled / optimized / DLL files
