@@ -33,7 +33,8 @@ class TweetAnalyser:
         filename = os.path.join(
             project_root_directory, "models", "naive_bayes_classifier.sav"
         )
-        self.sentiment_classifier = pickle.load(open(filename, "rb"))
+        with open(filename, "rb") as f:
+            self.sentiment_classifier = pickle.load(f)
 
     def main(self):
         """
@@ -72,4 +73,5 @@ if __name__ == "__main__":
         help="The twitter handle of the user you want to analyse the tweets of",
     )
     args = parser.parse_args()
-    TweetAnalyser(args.twitter_handle)
+    ta = TweetAnalyser(args.twitter_handle)
+    ta.main()
