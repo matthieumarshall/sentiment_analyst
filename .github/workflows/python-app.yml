@@ -38,4 +38,7 @@ jobs:
         TWEEPY_ACCESS_TOKEN_SECRET: ${{ secrets.TWEEPY_ACCESS_TOKEN_SECRET}}
       run: |
         export PYTHONPATH=sentiment_analyst
-        python -m pytest sentiment_analyst/tests/
+        python -m pytest --cov-report term --cov=sentiment_analyst/ sentiment_analyst/tests/
+    - name: Create wheel of package
+      run:
+        python setup.py bdist_wheel

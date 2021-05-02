@@ -11,19 +11,24 @@ import os
 import nltk
 import statistics
 from build_classifier import build_bag_of_words_features_filtered
+from tools.log_setup import logger
 
 
 class TweetAnalyser:
     def __init__(self, twitter_handle):
         self.sentiment_classifier = None
+        logger.info(f"Initiating with a twitter handle of {twitter_handle}")
         self.twitter_handle = twitter_handle
         self.set_classifier()
+        logger.debug("Classifier successfully read from pickle")
 
     def classify_tweet(self, text):
+        logger.debug(f"Classifying tweet : {text}")
         tokenised = nltk.word_tokenize(text)
         bag_of_words = build_bag_of_words_features_filtered(tokenised)
         result = self.sentiment_classifier.classify(bag_of_words)
         numberator = {"pos": 1, "neg": 0}
+        logger.debug(f"'{text}' has been classified as {numberator}")
         return numberator[result]
 
     def set_classifier(self):
@@ -45,21 +50,26 @@ class TweetAnalyser:
         auth.set_access_token(access_token, access_token_secret)
 
         api = tweepy.API(auth)
-
+        logger.debug("Tweepy API initialised")
         new_tweets = api.user_timeline(screen_name=self.twitter_handle, count=5)
 
         latest_tweets = [new_tweets[i].text for i in range(0, 4)]
+        logger.debug(f"Latest tweets are {latest_tweets}")
 
         tweet_sentiments = [self.classify_tweet(tweet) for tweet in latest_tweets]
+        logger.debug(f"The sentiments of these tweets are {tweet_sentiments}")
 
         number = statistics.mean(tweet_sentiments)
+        logger.debug(f"The mean of these sentiments is {number}")
         if number > 0.5:
             tweets_are = "positive"
         elif number < 0.5:
             tweets_are = "negative"
         else:
+            logger.error(f"The number {number} is wrong")
             raise ValueError(f"The number {number} is wrong")
-        print(
+
+        logger.info(
             f"The last 5 tweets of {self.twitter_handle} have generally been {tweets_are}"
         )
         return f"The last 5 tweets of {self.twitter_handle} have generally been {tweets_are}"
@@ -73,5 +83,6 @@ if __name__ == "__main__":
         help="The twitter handle of the user you want to analyse the tweets of",
     )
     args = parser.parse_args()
+    logger.debug(f"sentiment_analyst/sentiment.py called with arguments : {args}")
     ta = TweetAnalyser(args.twitter_handle)
-    ta.main()
+    result = ta.main()
