@@ -41,4 +41,5 @@ jobs:
         python -m pytest --cov-report term --cov=sentiment_analyst/ sentiment_analyst/tests/
     - name: Create wheel of package
       run:
+        python -m pip install wheel
         python setup.py bdist_wheel
